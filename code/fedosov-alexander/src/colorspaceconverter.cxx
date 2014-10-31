@@ -1,5 +1,6 @@
 // Copyright 2014 Fedosov Alexander
 #include "Includes/colorspaceconverter.hpp"
+#include <float.h>
 #include <math.h>
 #include <cstdlib>
 const int TYPE_RGB = 1;
@@ -11,115 +12,16 @@ val2_(static_cast<float>(0.0)), val3_(static_cast<float>(0.0)) {}
 Color::~Color() {}
 Color::Color(int type, float val1, float val2, float val3):type_(type),
 val1_(val1), val2_(val2), val3_(val3) {
-switch (type) {
-case TYPE_RGB: {
-    type_ = type;
-    if (val1 > static_cast<float>(0.0)) {
-        if (val1 > static_cast<float>(255.0)) {
-            val1_ = static_cast<float>(255.0);
-        } else {
-        val1_ = static_cast<float>(floor(val1));}
-    } else {val1_ = static_cast<float>(0.0);}
-
-    if (val2 > static_cast<float>(0.0)) {
-        if (val2 > static_cast<float>(255.0)) {
-            val2_ = static_cast<float>(255.0);
-        } else {
-        val2_ = static_cast<float>(floor(val2));}
-    } else {val2_ = static_cast<float>(0.0);}
-
-    if (val3 > static_cast<float>(0.0)) {
-        if (val3 > static_cast<float>(255.0)) {
-            val3_ = static_cast<float>(255.0);
-        } else {
-        val3_ = static_cast<float>(floor(val3));}
-    } else {val3_ = static_cast<float>(0.0);}
-    break;}
-case TYPE_HSV: {
-    type_ = type;
-    if (val1 > static_cast<float>(0.0)) {
-        if (static_cast<float>(1.0)-val1 > static_cast<float>(0.0000001))
-            {val1_ = val1;} else {
-            val1_ = static_cast<float>(1.0);
-        }
-    } else {val1_ = static_cast<float>(0.0);}
-    if (val2 > static_cast<float>(0.0)) {
-        if (static_cast<float>(1.0)-val2 > static_cast<float>(0.0000001))
-            {val2_ = val2;} else {
-            val2_ = static_cast<float>(1.0);
-        }
-    } else {val2_ = static_cast<float>(0.0);}
-
-     if (val3 > static_cast<float>(0.0)) {
-        if (static_cast<float>(1.0)-val3 > static_cast<float>(0.0000001))
-            {val3_ = val3;} else {
-            val3_ = static_cast<float>(1.0);
-        }
-    } else {val3_ = static_cast<float>(0.0);}
-    break;}
-case TYPE_CIE_LAB: {
-    type_ = type;
-    if (val1 > static_cast<float>(0.0)) {
-        if (val1 > static_cast<float>(100.0))
-            {val1_ = static_cast<float>(100.0);} else {
-        val1_ = val1;}
-    } else {val1_ = static_cast<float>(0.0);}
-    if (val2 > static_cast<float>(-86.185)) {
-        if (val2 > 98.254) {val2_ = static_cast<float>(98.254);} else {
-        val2_ = val2;}
-    } else {val2_ = static_cast<float>(-86.185);}
-    if (val3 > static_cast<float>(-107.863)) {
-        if (val3 > static_cast<float>(94.482)) {
-            val3_ = static_cast<float>(94.482);} else {
-        val3_ = val3;}
-    } else {val3_ = static_cast<float>(-107.863);}
-    break;}
-    case TYPE_XYZ: {
-    type_ = type;
-    if (val1 > static_cast<float>(0.0)) {
-        if (static_cast<float>(1.0)-val1 > static_cast<float>(0.0000001))
-            {val1_ = val1;} else {
-            val1_ = static_cast<float>(1.0);
-        }
-    } else {val1_ = static_cast<float>(0.0);}
-    if (val2 > static_cast<float>(0.0)) {
-        if (static_cast<float>(1.0)-val2 > static_cast<float>(0.0000001))
-            {val2_ = val2;} else {
-            val2_ = static_cast<float>(1.0);
-        }
-    } else {val2_ = static_cast<float>(0.0);}
-
-     if (val3 > static_cast<float>(0.0)) {
-        if (static_cast<float>(1.0)-val3 > static_cast<float>(0.0000001))
-            {val3_ = val3;} else {
-            val3_ = static_cast<float>(1.0);
-        }
-    } else {val3_ = static_cast<float>(0.0);}
-        break;
+    switch (type) {
+        case TYPE_RGB: {type_ = type; break;}
+        case TYPE_HSV: {type_ = type; break;}
+        case TYPE_XYZ: {type_ = type; break;}
+        case TYPE_CIE_LAB: {type_ = type; break;}
+        default: {type_ = TYPE_RGB; break;}
     }
-    default: {type_ = TYPE_RGB;
-    if (val1 > static_cast<float>(0.0)) {
-        if (val1 > static_cast<float>(255.0)) {
-            val1_ = static_cast<float>(255.0);
-        } else {
-        val1_ = static_cast<float>(floor(val1));}
-    } else {val1_ = static_cast<float>(0.0);}
-
-    if (val2 > static_cast<float>(0.0)) {
-        if (val2 > static_cast<float>(255.0)) {
-            val2_ = static_cast<float>(255.0);
-        } else {
-        val2_ = static_cast<float>(floor(val2));}
-    } else {val2_ = static_cast<float>(0.0);}
-
-    if (val3 > static_cast<float>(0.0)) {
-        if (val3 > static_cast<float>(255.0)) {
-            val3_ = static_cast<float>(255.0);
-        } else {
-        val3_ = static_cast<float>(floor(val3));}
-    } else {val3_ = static_cast<float>(0.0);}
-    }
-}
+    val1_ = Color::checkValue(type_, 1, val1);
+    val2_ = Color::checkValue(type_, 2, val2);
+    val3_ = Color::checkValue(type_, 3, val3);
 }
 
 void Color::setType(int type) {
@@ -127,37 +29,37 @@ switch (type) {
 case TYPE_RGB: {
     Color* tmp;
     Color* pseudo;
-    pseudo = new Color(this->getType(), this->get1stValue(),
-        this->get2ndValue(), this->get3rdValue());
+    pseudo = new Color(this->getType(), this->getValue(1),
+        this->getValue(2), this->getValue(3));
     tmp = pseudo->convert(TYPE_RGB);
     this->type_ = type;
-    this->set1stValue(tmp->get1stValue());
-    this->set2ndValue(tmp->get2ndValue());
-    this->set3rdValue(tmp->get3rdValue());
+    this->setValue(1, tmp->getValue(1));
+    this->setValue(2, tmp->getValue(2));
+    this->setValue(3, tmp->getValue(3));
     return;
 }
 case TYPE_HSV: {
     Color* tmp;
     Color* pseudo;
-    pseudo = new Color(this->getType(), this->get1stValue(),
-        this->get2ndValue(), this->get3rdValue());
-    tmp = pseudo->convert(TYPE_HSV);
+    pseudo = new Color(this->getType(), this->getValue(1),
+        this->getValue(2), this->getValue(3));
+     tmp = pseudo->convert(TYPE_HSV);
     this->type_ = type;
-    this->set1stValue(tmp->get1stValue());
-    this->set2ndValue(tmp->get2ndValue());
-    this->set3rdValue(tmp->get3rdValue());
+    this->setValue(1, tmp->getValue(1));
+    this->setValue(2, tmp->getValue(2));
+    this->setValue(3, tmp->getValue(3));
     return;
 }
 case TYPE_CIE_LAB: {
     Color* tmp;
     Color* pseudo;
-    pseudo = new Color(this->getType(), this->get1stValue(),
-        this->get2ndValue(), this->get3rdValue());
+    pseudo = new Color(this->getType(), this->getValue(1),
+        this->getValue(2), this->getValue(3));
     tmp = pseudo->convert(TYPE_CIE_LAB);
     this->type_ = type;
-    this->set1stValue(tmp->get1stValue());
-    this->set2ndValue(tmp->get2ndValue());
-    this->set3rdValue(tmp->get3rdValue());
+    this->setValue(1, tmp->getValue(1));
+    this->setValue(2, tmp->getValue(2));
+    this->setValue(3, tmp->getValue(3));
     return;
 }
 default: {return;}
@@ -165,96 +67,6 @@ default: {return;}
 }
 
 int Color::getType() {return type_;}
-
-void Color::set1stValue(float val1) {
-int type;
-type = this->getType();
-switch (type) {
-case TYPE_RGB: {
-    if (val1 > static_cast<float>(0.0)) {
-        if (255.0-val1 > 0.0) {
-            val1_ = static_cast<float>(floor(val1));
-        } else {val1_ = static_cast<float>(255.0);}
-    } else { val1_ = static_cast<float>(0.0);}
-    return;}
-case TYPE_HSV: {
-    if (val1 > static_cast<float>(0.0)) {
-        if (1.0-val1 > 0.0000001) {val1_ = val1;} else {
-            val1_ = static_cast<float>(1.0);
-        }
-    } else {val1_ = static_cast<float>(0.0);}
-    return;}
-case TYPE_CIE_LAB: {
-if (val1 > static_cast<float>(0.0)) {
-        if (val1 > 100.0) {val1_ = static_cast<float>(100.0);} else {
-        val1_ = val1;}
-    } else {val1_ = static_cast<float>(0.0);}
-    return;}
-default: return;
-}
-}
-
-float Color::get1stValue() {return val1_;}
-
-void Color::set2ndValue(float val2) {int type;
-type = this->getType();
-switch (type) {
-case TYPE_RGB: {
-    if (val2 > static_cast<float>(0.0)) {
-        if (255.0-val2 > 0.0) {
-            val2_ = static_cast<float>(floor(val2));
-        } else {val2_ = static_cast<float>(255.0);}
-    } else { val2_ = static_cast<float>(0.0);}
-    return;}
-case TYPE_HSV: {
-if (val2 > static_cast<float>(0.0)) {
-        if (1.0-val2 > 0.0000001) {val2_ = val2;} else {
-            val2_ = static_cast<float>(1.0);
-        }
-    } else {val2_ = static_cast<float>(0.0);}
-    return;}
-case TYPE_CIE_LAB: {
-    if (val2 > static_cast<float>(-86.185)) {
-        if (val2 > 98.254) {val2_ = static_cast<float>(98.254);} else {
-        val2_ = val2;}
-    } else {val2_ = static_cast<float>(-86.185);}
-    return;}
-default: return;
-}
-}
-
-float Color::get2ndValue() {return val2_;}
-
-void Color::set3rdValue(float val3) {
-int type;
-type = this->getType();
-switch (type) {
-case TYPE_RGB: {
-    if (val3 > static_cast<float>(0.0)) {
-        if (255.0-val3 > 0.0) {
-            val3_ = static_cast<float>(floor(val3));
-        } else {val3_ = static_cast<float>(255.0);}
-    } else { val3_ = static_cast<float>(0.0);}
-    return;}
-case TYPE_HSV: {
-if (val3 > static_cast<float>(0.0)) {
-        if (1.0-val3 > 0.0000001) {val3_ = val3;} else {
-            val3_ = static_cast<float>(1.0);
-        }
-    } else {val3_ = static_cast<float>(0.0);}
-    return;}
-case TYPE_CIE_LAB: {
-    if (val3 > static_cast<float>(-107.863)) {
-        if (val3 > static_cast<float>(94.482)) {
-            val3_ = static_cast<float>(94.482);} else {
-        val3_ = val3;}
-    } else {val3_ = static_cast<float>(-107.863);}
-    return;}
-default: return;}
-}
-
-float Color::get3rdValue() {return val3_;}
-
 Color* Color::convert(int type) {
 Color* converted;
 switch (type) {
@@ -271,17 +83,17 @@ int type;
 type = this->getType();
 switch (type) {
 case TYPE_RGB: {
-converted = new Color(TYPE_RGB, this->get1stValue(),
-this->get1stValue(), this->get1stValue());
+converted = new Color(TYPE_RGB, this->getValue(1),
+this->getValue(2), this->getValue(3));
 return converted;
 }
 case TYPE_HSV: {
 float R, G, B;
 float H, S, V, I;
 float var1, var2, var3;
-H = this->get1stValue();
-S = this->get2ndValue();
-V = this->get3rdValue();
+H = this->getValue(1);
+S = this->getValue(2);
+V = this->getValue(3);
 if (fabs(S) < 0.0000001) {R = G = B = V * 255;
 converted = new Color(TYPE_RGB, R, G, B);
 return converted;} else {
@@ -313,7 +125,6 @@ case TYPE_CIE_LAB: {
 }
 default: return NULL;
 }
-return NULL;
 }
 
 Color* Color::convertToHSV() {
@@ -324,9 +135,9 @@ Color* Color::convertToHSV() {
         case TYPE_RGB: {
             float red, green, blue, maxValue, minValue, delta;
             float H, S, V;
-            red = this->get1stValue()/255;
-            green = this->get2ndValue()/255;
-            blue = this->get3rdValue()/255;
+            red = this->getValue(1)/255;
+            green = this->getValue(2)/255;
+            blue = this->getValue(3)/255;
             minValue = fminf(red, fminf(green, blue));
             maxValue = fmaxf(red, fmaxf(green, blue));
             delta = maxValue-minValue;
@@ -362,8 +173,8 @@ converted = new Color(TYPE_HSV, H, S, V);
 return converted;
 }
 case TYPE_HSV: {
-converted = new Color(TYPE_HSV, Color::get1stValue(),
-Color::get1stValue(), Color::get1stValue());
+converted = new Color(TYPE_HSV, this->getValue(1),
+this->getValue(2), this->getValue(3));
 return converted;
 }
 case TYPE_CIE_LAB: {
@@ -376,7 +187,6 @@ return converted;
 }
 default: return NULL;
 }
-return NULL;
 }
 
 Color* Color::convertToXYZ() {
@@ -387,9 +197,9 @@ switch (type) {
 case TYPE_RGB: {
 float R, G, B;
 float X, Y, Z;
-R = this->get1stValue();
-G = this->get2ndValue();
-B = this->get3rdValue();
+R = this->getValue(1);
+G = this->getValue(2);
+B = this->getValue(3);
 R/=255; G/=255; B/=255;
 if ((R-0.04045) > 0) { R = static_cast<float>
 (pow((R+0.055)/1.055, 2.4));} else {
@@ -412,9 +222,9 @@ return converted;
 }
 case TYPE_CIE_LAB: {
 float L, A, B;
-L = this->get1stValue();
-A = this->get2ndValue();
-B = this->get3rdValue();
+L = this->getValue(1);
+A = this->getValue(2);
+B = this->getValue(3);
 float X, Y, Z;
 Y = (L+16)/116;
 X = A/500+Y;
@@ -440,7 +250,6 @@ if (pow(X, 3.0)-0.008856 > 0.0000001)
     }
     default: return NULL;
 }
-return converted;
 }
 
 Color* Color::convertToCIELAB() {
@@ -463,16 +272,16 @@ switch (type) {
         return converted;
     }
     case TYPE_CIE_LAB: {
-        converted = new Color(TYPE_CIE_LAB, this->get1stValue(),
-            this->get2ndValue(), this->get3rdValue());
+        converted = new Color(TYPE_CIE_LAB, this->getValue(1),
+            this->getValue(2), this->getValue(3));
         return converted;
     }
     case TYPE_XYZ: {
         float X, Y, Z;
         float L, A, B;
-        X = this->get1stValue();
-        Y = this->get2ndValue();
-        Z = this->get3rdValue();
+        X = this->getValue(1);
+        Y = this->getValue(2);
+        Z = this->getValue(3);
         X = static_cast<float>(X/95.047);
         Y = static_cast<float>(Y/100.0);
         Z = static_cast<float>(Z/108.883);
@@ -492,5 +301,97 @@ converted = new Color(TYPE_CIE_LAB, L, A, B);
         return converted;
     }
     default: return NULL;
+}
+}
+float Color::getValue(int position) {
+    switch (position) {
+    case 1: {
+        return val1_;
+    }
+    case 2: {
+        return val2_;
+    }
+    case 3: {
+        return val3_;
+    }
+    default: return -FLT_MAX;
+}
+}
+void Color::setValue(int position, float val) {
+int type;
+type = this->getType();
+switch (position) {
+    case 1: {
+        val1_ = Color::checkValue(type, 1, val);
+        return;
+    }
+    case 2: {
+        val2_ = Color::checkValue(type, 2, val);
+        return;
+    }
+    case 3: {
+        val3_ = Color::checkValue(type, 3, val);
+        return;
+    }
+}
+}
+
+float Color::checkValue(int type, int position, float val) {
+    switch (type) {
+case TYPE_RGB: {
+            if (val > static_cast<float>(0.0)) {
+                if (val > static_cast<float>(255.0)) {
+                val = static_cast<float>(255.0);
+                } else {
+                val = static_cast<float>(floor(val));}
+            } else {val = static_cast<float>(0.0);}
+            return val;
+}
+case TYPE_HSV: {
+            if (val > static_cast<float>(0.0)) {
+            if (static_cast<float>(1.0)-val > static_cast<float>(0.0000001))
+            {val = val;} else {
+            val = static_cast<float>(1.0);
+            }
+            } else {val = static_cast<float>(0.0);}
+            return val;
+}
+case TYPE_CIE_LAB: {
+    switch (position) {
+        case 1: {
+            if (val > static_cast<float>(0.0)) {
+            if (val > static_cast<float>(100.0))
+            {val = static_cast<float>(100.0);} else {
+            val = val;}
+            } else {val = static_cast<float>(0.0);}
+            return val;
+        }
+        case 2: {
+            if (val > static_cast<float>(-86.185)) {
+            if (val > 98.254) {val = static_cast<float>(98.254);} else {
+            val = val;}
+            } else {val = static_cast<float>(-86.185);}
+            return val;
+        }
+        case 3: {
+            if (val > static_cast<float>(-107.863)) {
+            if (val > static_cast<float>(94.482)) {
+            val = static_cast<float>(94.482);} else {
+            val = val;}
+            } else {val = static_cast<float>(-107.863);}
+            return val;
+        }
+    }
+}
+case TYPE_XYZ: {
+            if (val > static_cast<float>(0.0)) {
+            if (static_cast<float>(1.0)-val > static_cast<float>(0.0000001))
+            {val = val;} else {
+            val = static_cast<float>(1.0);
+            }
+            } else {val = static_cast<float>(0.0);}
+            return val;
+}
+default: return -FLT_MAX;
 }
 }
