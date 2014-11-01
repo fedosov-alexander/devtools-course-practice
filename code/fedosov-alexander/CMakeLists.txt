@@ -2,8 +2,8 @@
 ##### Declaring
 #############################################
 
-set(libname  "fedosov-alexander-colorspaceconverter-library")
-set(testname "fedosov-alexander-colorspaceconverter-test")
+set(libname  "fedosov-alexander-lengthconverter-library")
+set(testname "fedosov-alexander-lengthconverter-test")
 
 message("")
 message("############################################")
