@@ -123,6 +123,33 @@ case TYPE_CIE_LAB: {
     converted = tmp->convertToRGB();
     return converted;
 }
+case TYPE_XYZ: {
+    float X, Y, Z;
+    float R, G, B;
+    X = this->getValue(1);
+    Y = this->getValue(2);
+    Z = this->getValue(3);
+    X/=static_cast<float>(100.0);
+    Y/=static_cast<float>(100.0);
+    Z/=static_cast<float>(100.0);
+    R = static_cast<float>(X*3.2406+Y*(-1.5372)+Z*(-0.4986));
+    G = static_cast<float>(X*(-0.9689)+Y*1.8758+Z*0.0415);
+    B = static_cast<float>(X*0.0557+Y*(-0.2040)+Z*1.0570);
+if (R > 0.0031308) {
+    R = static_cast<float>(1.055*(pow(R, 1/2.4))-0.055);} else {
+    R*=static_cast<float>(12.92);}
+if (G > 0.0031308) {
+    G = static_cast<float>(1.055*(pow(G, 1/2.4))-0.055);} else {
+    G*=static_cast<float>(12.92);}
+    if (B > 0.0031308) {
+    B = static_cast<float>(1.055*(pow(B, 1/2.4))-0.055);} else {
+    B*=static_cast<float>(12.92);}
+R*=255;
+G*=255;
+B*=255;
+converted = new Color(TYPE_RGB, R, G, B);
+return converted;
+}
 default: return NULL;
 }
 }
@@ -384,13 +411,31 @@ case TYPE_CIE_LAB: {
     }
 }
 case TYPE_XYZ: {
+            switch (position) {
+        case 1: {
             if (val > static_cast<float>(0.0)) {
-            if (static_cast<float>(1.0)-val > static_cast<float>(0.0000001))
-            {val = val;} else {
-            val = static_cast<float>(1.0);
-            }
+            if (val > static_cast<float>(95.047))
+            {val = static_cast<float>(95.047);} else {
+            val = val;}
             } else {val = static_cast<float>(0.0);}
             return val;
+        }
+        case 2: {
+            if (val > static_cast<float>(0.0)) {
+            if (val > 100.0) {val = static_cast<float>(100.0);} else {
+            val = val;}
+            } else {val = static_cast<float>(0.0);}
+            return val;
+        }
+        case 3: {
+            if (val > static_cast<float>(0.0)) {
+            if (val > static_cast<float>(108.883)) {
+            val = static_cast<float>(108.883);} else {
+            val = val;}
+            } else {val = static_cast<float>(0.0);}
+            return val;
+        }
+    }
 }
 default: return -FLT_MAX;
 }

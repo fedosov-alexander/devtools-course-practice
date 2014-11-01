@@ -19,24 +19,11 @@ class ColorspaceconverterTest : public ::testing::Test {
 
 TEST_F(ColorspaceconverterTest, creation_test1) {
     Color* col1;
-    Color* col2;
-    Color* col3;
     col1 = new Color(TYPE_RGB, static_cast<float>(233.12),
         static_cast<float>(-FLT_MAX), static_cast<float>(FLT_MAX));
     EXPECT_EQ(col1->getValue(1), static_cast<float>(233.0));
     EXPECT_EQ(col1->getValue(2), static_cast<float>(0.0));
     EXPECT_EQ(col1->getValue(3), static_cast<float>(255.0));
-
-    col2 = new Color(TYPE_RGB, static_cast<float>(-FLT_MAX),
-        static_cast<float>(233.12), static_cast<float>(-FLT_MAX));
-    EXPECT_EQ(col2->getValue(1), static_cast<float>(0.0));
-    EXPECT_EQ(col2->getValue(2), static_cast<float>(233.0));
-    EXPECT_EQ(col2->getValue(3), static_cast<float>(0.0));
-    col3 = new Color(TYPE_RGB, static_cast<float>(FLT_MAX),
-        static_cast<float>(FLT_MAX), static_cast<float>(233.12));
-    EXPECT_EQ(col3->getValue(1), static_cast<float>(255.0));
-    EXPECT_EQ(col3->getValue(2), static_cast<float>(255.0));
-    EXPECT_EQ(col3->getValue(3), static_cast<float>(233.0));
 }
 
 TEST_F(ColorspaceconverterTest, creation_test2) {
@@ -66,46 +53,53 @@ TEST_F(ColorspaceconverterTest, creation_test4) {
 }
 TEST_F(ColorspaceconverterTest, creation_test5) {
     Color* col1;
-    Color* col2;
-    Color* col3;
     col1 = new Color(TYPE_HSV, static_cast<float>(0.33),
         static_cast<float>(-FLT_MAX), static_cast<float>(FLT_MAX));
     EXPECT_EQ(col1->getValue(1), static_cast<float>(0.33));
     EXPECT_EQ(col1->getValue(2), static_cast<float>(0.0));
     EXPECT_EQ(col1->getValue(3), static_cast<float>(1.0));
-
-    col2 = new Color(TYPE_HSV, static_cast<float>(-FLT_MAX),
-        static_cast<float>(0.33), static_cast<float>(-FLT_MAX));
-    EXPECT_EQ(col2->getValue(1), static_cast<float>(0.0));
-    EXPECT_EQ(col2->getValue(2), static_cast<float>(0.33));
-    EXPECT_EQ(col2->getValue(3), static_cast<float>(0.0));
-    col3 = new Color(TYPE_HSV, static_cast<float>(FLT_MAX),
-        static_cast<float>(FLT_MAX), static_cast<float>(0.33));
-    EXPECT_EQ(col3->getValue(1), static_cast<float>(1.0));
-    EXPECT_EQ(col3->getValue(2), static_cast<float>(1.0));
-    EXPECT_EQ(col3->getValue(3), static_cast<float>(0.33));
 }
 TEST_F(ColorspaceconverterTest, creation_test6) {
     Color* col1;
     Color* col2;
     Color* col3;
-    col1 = new Color(TYPE_XYZ, static_cast<float>(0.33),
+    col1 = new Color(TYPE_XYZ, FLT_MAX,
         static_cast<float>(-FLT_MAX), static_cast<float>(FLT_MAX));
-    EXPECT_EQ(col1->getValue(1), static_cast<float>(0.33));
+    EXPECT_EQ(col1->getValue(1), static_cast<float>(95.047));
     EXPECT_EQ(col1->getValue(2), static_cast<float>(0.0));
-    EXPECT_EQ(col1->getValue(3), static_cast<float>(1.0));
-
-    col2 = new Color(TYPE_XYZ, static_cast<float>(-FLT_MAX),
-        static_cast<float>(0.33), static_cast<float>(-FLT_MAX));
+    EXPECT_EQ(col1->getValue(3), static_cast<float>(108.883));
+     col2 = new Color(TYPE_XYZ, -FLT_MAX, FLT_MAX,
+        static_cast<float>(33.0));
     EXPECT_EQ(col2->getValue(1), static_cast<float>(0.0));
-    EXPECT_EQ(col2->getValue(2), static_cast<float>(0.33));
-    EXPECT_EQ(col2->getValue(3), static_cast<float>(0.0));
-    col3 = new Color(TYPE_XYZ, static_cast<float>(FLT_MAX),
-        static_cast<float>(FLT_MAX), static_cast<float>(0.33));
-    EXPECT_EQ(col3->getValue(1), static_cast<float>(1.0));
-    EXPECT_EQ(col3->getValue(2), static_cast<float>(1.0));
-    EXPECT_EQ(col3->getValue(3), static_cast<float>(0.33));
+    EXPECT_EQ(col2->getValue(2), static_cast<float>(100.0));
+    EXPECT_EQ(col2->getValue(3), static_cast<float>(33.0));
+    col3 = new Color(TYPE_XYZ, static_cast<float>(33.0),
+        static_cast<float>(33.0), -FLT_MAX);
+    EXPECT_EQ(col3->getValue(1), static_cast<float>(33.0));
+    EXPECT_EQ(col3->getValue(2), static_cast<float>(33.0));
+    EXPECT_EQ(col3->getValue(3), static_cast<float>(0.0));
 }
+
+TEST_F(ColorspaceconverterTest, creation_test7) {
+    Color* col1;
+    Color* col2;
+    Color* col3;
+    col1 = new Color(TYPE_CIE_LAB, FLT_MAX, -FLT_MAX,
+        static_cast<float>(33.0));
+    EXPECT_EQ(col1->getValue(1), static_cast<float>(100.0));
+    EXPECT_EQ(col1->getValue(2), static_cast<float>(-86.185));
+    EXPECT_EQ(col1->getValue(3), static_cast<float>(33.0));
+    col2 = new Color(TYPE_CIE_LAB, -FLT_MAX, FLT_MAX, FLT_MAX);
+    EXPECT_EQ(col2->getValue(1), static_cast<float>(0.0));
+    EXPECT_EQ(col2->getValue(2), static_cast<float>(98.254));
+    EXPECT_EQ(col2->getValue(3), static_cast<float>(94.482));
+    col3 = new Color(TYPE_CIE_LAB, static_cast<float>(33.0),
+        static_cast<float>(33.0), -FLT_MAX);
+    EXPECT_EQ(col3->getValue(1), static_cast<float>(33.0));
+    EXPECT_EQ(col3->getValue(2), static_cast<float>(33.0));
+    EXPECT_EQ(col3->getValue(3), static_cast<float>(-107.863));
+}
+
 TEST_F(ColorspaceconverterTest, setting_values_test1) {
     Color* col;
     col = new Color(TYPE_RGB, 0, 0, 0);
@@ -115,18 +109,6 @@ TEST_F(ColorspaceconverterTest, setting_values_test1) {
     EXPECT_EQ(col->getValue(1), static_cast<float>(0.0));
     col->setValue(1, static_cast<float>(33.0));
     EXPECT_EQ(col->getValue(1), static_cast<float>(33.0));
-    col->setValue(2, FLT_MAX);
-    EXPECT_EQ(col->getValue(2), static_cast<float>(255.0));
-    col->setValue(2, FLT_MIN);
-    EXPECT_EQ(col->getValue(2), static_cast<float>(0.0));
-    col->setValue(2, static_cast<float>(33.0));
-    EXPECT_EQ(col->getValue(2), static_cast<float>(33.0));
-    col->setValue(3, FLT_MAX);
-    EXPECT_EQ(col->getValue(3), static_cast<float>(255.0));
-    col->setValue(3, FLT_MIN);
-    EXPECT_EQ(col->getValue(3), static_cast<float>(0.0));
-    col->setValue(3, static_cast<float>(33.0));
-    EXPECT_EQ(col->getValue(3), static_cast<float>(33.0));
 }
 TEST_F(ColorspaceconverterTest, setting_values_test2) {
     Color* col;
@@ -159,18 +141,6 @@ TEST_F(ColorspaceconverterTest, setting_values_test3) {
     EXPECT_EQ(col->getValue(1), static_cast<float>(0.0));
     col->setValue(1, static_cast<float>(0.33));
     EXPECT_EQ(col->getValue(1), static_cast<float>(0.33));
-    col->setValue(2, FLT_MAX);
-    EXPECT_EQ(col->getValue(2), static_cast<float>(1.0));
-    col->setValue(2, -FLT_MAX);
-    EXPECT_EQ(col->getValue(2), static_cast<float>(0.0));
-    col->setValue(2, static_cast<float>(0.33));
-    EXPECT_EQ(col->getValue(2), static_cast<float>(0.33));
-    col->setValue(3, FLT_MAX);
-    EXPECT_EQ(col->getValue(3), static_cast<float>(1.0));
-    col->setValue(3, -FLT_MAX);
-    EXPECT_EQ(col->getValue(3), static_cast<float>(0.0));
-    col->setValue(3, static_cast<float>(0.33));
-    EXPECT_EQ(col->getValue(3), static_cast<float>(0.33));
 }
 
 TEST_F(ColorspaceconverterTest, conversion_test1) {
@@ -204,3 +174,157 @@ TEST_F(ColorspaceconverterTest, type_setting_test1) {
         static_cast<float>(0.01));
 }
 
+TEST_F(ColorspaceconverterTest, conversion_test2) {
+    Color* col;
+    col = new Color(TYPE_RGB, static_cast<float>(0.0),
+        static_cast<float>(0.0), static_cast<float>(0.0));
+    col->convert(TYPE_HSV);
+}
+
+TEST_F(ColorspaceconverterTest, conversion_test3) {
+    Color* col;
+    col = new Color(TYPE_HSV, static_cast<float>(0.0),
+        static_cast<float>(0.0), static_cast<float>(0.0));
+    col->convert(TYPE_RGB);
+}
+
+TEST_F(ColorspaceconverterTest, conversion_test4) {
+    Color* col;
+    col = new Color(TYPE_RGB, static_cast<float>(0.0),
+        static_cast<float>(255.0), static_cast<float>(0.0));
+    col->convert(TYPE_HSV);
+}
+
+TEST_F(ColorspaceconverterTest, conversion_test5) {
+    Color* col;
+    col = new Color(TYPE_RGB, static_cast<float>(0.0),
+        static_cast<float>(0.0), static_cast<float>(255.0));
+    col->convert(TYPE_HSV);
+}
+
+TEST_F(ColorspaceconverterTest, conversion_test6) {
+    Color* col;
+    col = new Color(TYPE_RGB, static_cast<float>(255.0),
+        static_cast<float>(255.0), static_cast<float>(255.0));
+    col->convert(TYPE_HSV);
+}
+
+TEST_F(ColorspaceconverterTest, conversion_test7) {
+    Color* col;
+    col = new Color(TYPE_RGB, static_cast<float>(255.0),
+        static_cast<float>(0.0), static_cast<float>(250.0));
+    col->convert(TYPE_HSV);
+}
+
+
+TEST_F(ColorspaceconverterTest, conversion_test8) {
+    Color* col;
+    col = new Color(TYPE_RGB, static_cast<float>(250.0),
+        static_cast<float>(0.0), static_cast<float>(255.0));
+    col->convert(TYPE_HSV);
+}
+
+TEST_F(ColorspaceconverterTest, conversion_test9) {
+    Color* col;
+    col = new Color(TYPE_HSV, static_cast<float>(1.0),
+        static_cast<float>(0.0), static_cast<float>(1.0));
+    col->convert(TYPE_RGB);
+}
+
+TEST_F(ColorspaceconverterTest, conversion_test10) {
+    Color* col;
+    col = new Color(TYPE_HSV, static_cast<float>(1.0),
+        static_cast<float>(1.0), static_cast<float>(1.0));
+    col->convert(TYPE_RGB);
+}
+
+TEST_F(ColorspaceconverterTest, conversion_test11) {
+    Color* col;
+    col = new Color(TYPE_HSV, static_cast<float>(1.0/6.0),
+        static_cast<float>(1.0), static_cast<float>(1.0));
+    col->convert(TYPE_RGB);
+}
+
+TEST_F(ColorspaceconverterTest, conversion_test12) {
+    Color* col;
+    col = new Color(TYPE_HSV, static_cast<float>(2.0/6.0),
+        static_cast<float>(1.0), static_cast<float>(1.0));
+    col->convert(TYPE_RGB);
+}
+
+TEST_F(ColorspaceconverterTest, conversion_test13) {
+    Color* col;
+    col = new Color(TYPE_HSV, static_cast<float>(3.0/6.0),
+        static_cast<float>(1.0), static_cast<float>(1.0));
+    col->convert(TYPE_RGB);
+}
+
+TEST_F(ColorspaceconverterTest, conversion_test14) {
+    Color* col;
+    col = new Color(TYPE_HSV, static_cast<float>(4.0/6.0),
+        static_cast<float>(1.0), static_cast<float>(1.0));
+    col->convert(TYPE_RGB);
+}
+
+TEST_F(ColorspaceconverterTest, conversion_test15) {
+    Color* col;
+    col = new Color(TYPE_HSV, static_cast<float>(5.0/6.0),
+        static_cast<float>(1.0), static_cast<float>(1.0));
+    col->convert(TYPE_RGB);
+}
+
+TEST_F(ColorspaceconverterTest, conversion_test16) {
+    Color* col;
+    col = new Color(TYPE_CIE_LAB, static_cast<float>(100.0),
+        static_cast<float>(98.0), static_cast<float>(-107.0));
+    col->setType(TYPE_RGB);
+    EXPECT_EQ(col->getType(), TYPE_RGB);
+    EXPECT_NEAR(col->getValue(1), static_cast<float>(255.0),
+        static_cast<float>(0.01));
+    EXPECT_NEAR(col->getValue(2), static_cast<float>(181.0),
+        static_cast<float>(0.01));
+    EXPECT_NEAR(col->getValue(3), static_cast<float>(255.0),
+        static_cast<float>(0.01));
+}
+
+TEST_F(ColorspaceconverterTest, conversion_test17) {
+    Color* col;
+    col = new Color(TYPE_CIE_LAB, static_cast<float>(0.0),
+        static_cast<float>(-86.0), static_cast<float>(94.0));
+    col->convert(TYPE_RGB);
+    EXPECT_EQ(col->getType(), TYPE_RGB);
+    EXPECT_NEAR(col->getValue(1), static_cast<float>(0.0),
+        static_cast<float>(0.01));
+    EXPECT_NEAR(col->getValue(2), static_cast<float>(48.0),
+        static_cast<float>(0.01));
+    EXPECT_NEAR(col->getValue(3), static_cast<float>(138.0),
+        static_cast<float>(0.01));
+}
+
+TEST_F(ColorspaceconverterTest, conversion_test18) {
+    Color* col;
+    col = new Color(TYPE_RGB, static_cast<float>(255.0),
+        static_cast<float>(181.0), static_cast<float>(255.0));
+    col->convert(TYPE_CIE_LAB);
+    EXPECT_EQ(col->getType(), TYPE_CIE_LAB);
+    EXPECT_NEAR(col->getValue(1), static_cast<float>(100.0),
+        static_cast<float>(0.01));
+    EXPECT_NEAR(col->getValue(2), static_cast<float>(98.0),
+        static_cast<float>(0.01));
+    EXPECT_NEAR(col->getValue(3), static_cast<float>(-107.0),
+        static_cast<float>(0.01));
+}
+
+TEST_F(ColorspaceconverterTest, conversion_test19) {
+    Color* col;
+    col = new Color(TYPE_RGB, static_cast<float>(0.0),
+        static_cast<float>(48.0), static_cast<float>(138.0));
+    col->convert(TYPE_CIE_LAB);
+    EXPECT_EQ(col->getType(), TYPE_CIE_LAB);
+    EXPECT_NEAR(col->getValue(1), static_cast<float>(0.0),
+        static_cast<float>(0.01));
+    EXPECT_NEAR(col->getValue(2), static_cast<float>(-86.0),
+        static_cast<float>(0.01));
+    EXPECT_NEAR(col->getValue(3), static_cast<float>(94.0),
+        static_cast<float>(0.01));
+}
