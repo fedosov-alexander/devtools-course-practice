@@ -108,3 +108,7 @@ TEST_F(lengthconverterTest, conversion_test22) {
         100.0, LengthConverter::TYPE_METER), 100.0, 0.01);
 }
 
+TEST_F(lengthconverterTest, conversion_test23) {
+    EXPECT_NEAR(converter.convert(LengthConverter::TYPE_MILE,
+        100.0, LengthConverter::TYPE_MILE), 100.0, 0.01);
+}
