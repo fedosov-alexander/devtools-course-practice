@@ -31,7 +31,7 @@ std::string Application::operator()(int argc, const char** argv) {
 
 void Application::parseArgsAndConvert(int argc, const char** argv) {
     LengthConverter::Type convTo, convFrom;
-    double value;
+    double value = 0.0;
     int i;
     if (argc != 6) {
         help(argv[0]);
