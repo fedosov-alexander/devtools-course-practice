@@ -17,30 +17,6 @@ set_tests_properties (can_Print_Help_Without_Arguments
   PROPERTIES PASS_REGULAR_EXPRESSION "This is a simple length converter app")
 
 add_test(
-    NAME Check_Args_Correctness
-    COMMAND ${appname} 1 2 3 4 5
-)
-
-set_tests_properties (Check_Args_Correctness
-  PROPERTIES PASS_REGULAR_EXPRESSION "Wrong input!")
-
-add_test(
-    NAME Can_Detect_Wrong_Input1
-    COMMAND ${appname} -from notype 10.0 -to yards
-)
-
-set_tests_properties (Can_Detect_Wrong_Input1
-  PROPERTIES PASS_REGULAR_EXPRESSION "Wrong input!")
-
-add_test(
-    NAME Can_Detect_Wrong_Input2
-    COMMAND ${appname} -from meters 10.0 -to notype
-)
-
-set_tests_properties (Can_Detect_Wrong_Input2
-  PROPERTIES PASS_REGULAR_EXPRESSION "Wrong input!")
-
-add_test(
     NAME Can_Detect_Wrong_Number_Format
     COMMAND ${appname} -from meters abc -to yards
 )

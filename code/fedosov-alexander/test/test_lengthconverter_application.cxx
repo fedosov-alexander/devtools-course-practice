@@ -34,6 +34,18 @@ class AppTest : public ::testing::Test {
         output_ = app_(argc, argv);
     }
 
+    void WrongAction(vector<string> args_) {
+        vector<const char*> starts;
+        starts.push_back("appname");
+
+        for (size_t i = 0; i < args_.size(); ++i) {
+            starts.push_back(args_[i].c_str());
+        }
+        const char** argv = &starts.front();
+        int argc = static_cast<int>(args_.size()) + 1;
+        app_(argc, argv);
+    }
+
     void Assert(std::string expected) {
         EXPECT_TRUE(RE::PartialMatch(output_, RE(expected)));
     }
@@ -52,25 +64,19 @@ TEST_F(AppTest, Do_Print_Help_Without_Arguments) {
 TEST_F(AppTest, Check_Args_Correctness) {
     args = {"1", "2", "3", "4", "5"};
 
-    Act(args);
-
-    Assert("Wrong input!\n");
+    EXPECT_THROW(WrongAction(args), std::string);
 }
 
 TEST_F(AppTest, Can_Detect_Wrong_Input1) {
     args = {"-from", "notype", "10.0", "-to", "yards"};
 
-    Act(args);
-
-    Assert("Wrong input!\n");
+    EXPECT_THROW(WrongAction(args), std::string);
 }
 
 TEST_F(AppTest, Can_Detect_Wrong_Input2) {
     args = {"-from", "meters", "10.0", "-to", "notype"};
 
-    Act(args);
-
-    Assert("Wrong input!\n");
+    EXPECT_THROW(WrongAction(args), std::string);
 }
 
 TEST_F(AppTest, Can_Detect_Wrong_Number_Format) {

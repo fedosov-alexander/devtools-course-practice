@@ -34,16 +34,16 @@ void Application::parseArgsAndConvert(int argc, const char** argv) {
     double value = 0.0;
     int i;
     char* valEnd;
+    const char* nameFrom = "wrongname";
+    const char* nameTo = "wrongname";
     if (argc != 6) {
         help(argv[0]);
         return;
     }
-    convTo = LengthConverter::TYPE_WRONG;
-    convFrom = LengthConverter::TYPE_WRONG;
     for (i = 1; i < argc; i++) {
     if (!strcmp(argv[i], "-from")) {
         ++i;
-        convFrom = checkType(argv[i]);
+        nameFrom = argv[i];
         ++i;
         value = strtod(argv[i], &valEnd);
         if (valEnd[0]) {
@@ -53,15 +53,11 @@ void Application::parseArgsAndConvert(int argc, const char** argv) {
         }
     } else if (!strcmp(argv[i], "-to")) {
         ++i;
-         convTo = checkType(argv[i]);
+        nameTo = argv[i];
     }
     }
-    if (convTo == LengthConverter::TYPE_WRONG ||
-        convFrom == LengthConverter::TYPE_WRONG) {
-        message_ = "";
-        message_ += "Wrong input!\n";
-        return;
-    }
+    convFrom = checkType(nameFrom);
+    convTo = checkType(nameTo);
     std::ostringstream stream;
     stream << "Conversion result is ";
     LengthConverter lengthConverter;
@@ -83,7 +79,7 @@ LengthConverter::Type Application::checkType(const char* type) {
         } else if (!strcmp(type, "miles")) {
             typeToReturn = LengthConverter::TYPE_MILE;
         } else {
-            typeToReturn =  LengthConverter::TYPE_WRONG;
+            throw std::string("Unknown type");
         }
     return typeToReturn;
 }
