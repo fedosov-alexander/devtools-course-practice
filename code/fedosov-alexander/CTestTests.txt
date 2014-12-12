@@ -81,9 +81,41 @@ set_tests_properties (Can_Convert_Yards_To_Yards
   PROPERTIES PASS_REGULAR_EXPRESSION "Conversion result is 10")
 
 add_test(
-    NAME Can_Convert_Miles_To_Miles
-    COMMAND ${appname} -from miles 10 -to miles
-)
+    NAME Can_Convert_Miles_To_Yards
+    COMMAND ${appname} -from miles 10 -to yards
+    )
 
-set_tests_properties (Can_Convert_Miles_To_Miles
-  PROPERTIES PASS_REGULAR_EXPRESSION "Conversion result is 9.999")
+set_tests_properties (Can_Convert_Miles_To_Yards
+  PROPERTIES PASS_REGULAR_EXPRESSION "Conversion result is 17600")
+
+add_test(
+    NAME Can_Read_DBL_Starts_wtih_dot
+    COMMAND ${appname} -from meters .10 -to meters
+    )
+
+set_tests_properties (Can_Read_DBL_Starts_wtih_dot
+  PROPERTIES PASS_REGULAR_EXPRESSION "Conversion result is 0.1")
+
+add_test(
+    NAME Print_Error_On_Invalid_Input
+    COMMAND ${appname} -from meters .10abc -to meters
+    )
+
+set_tests_properties (Print_Error_On_Invalid_Input
+  PROPERTIES PASS_REGULAR_EXPRESSION "Wrong input!")
+
+add_test(
+    NAME Can_Read_Signed_Values
+    COMMAND ${appname} -from meters +0 -to meters
+    )
+
+set_tests_properties (Can_Read_Signed_Values
+  PROPERTIES PASS_REGULAR_EXPRESSION "Conversion result is +0")
+
+add_test(
+    NAME Can_Read_Signed_Values_Started_With_Dot
+    COMMAND ${appname} -from meters +.15 -to meters
+    )
+
+set_tests_properties (Can_Read_Signed_Values_Started_With_Dot
+  PROPERTIES PASS_REGULAR_EXPRESSION "Conversion result is +0.15")

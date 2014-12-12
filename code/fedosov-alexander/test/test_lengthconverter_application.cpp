@@ -117,5 +117,5 @@ TEST_F(AppTest, Can_Convert_Miles_To_Miles) {
 
     Act(args);
 
-    Assert("Conversion result is 9.999");
+    Assert("Conversion result is 10");
 }

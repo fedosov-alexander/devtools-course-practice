@@ -33,6 +33,7 @@ void Application::parseArgsAndConvert(int argc, const char** argv) {
     LengthConverter::Type convTo, convFrom;
     double value = 0.0;
     int i;
+    char* valEnd;
     if (argc != 6) {
         help(argv[0]);
         return;
@@ -42,39 +43,17 @@ void Application::parseArgsAndConvert(int argc, const char** argv) {
     for (i = 1; i < argc; i++) {
     if (!strcmp(argv[i], "-from")) {
         ++i;
-        if (!strcmp(argv[i], "meters")) {
-            convFrom = LengthConverter::TYPE_METER;
-        } else if (!strcmp(argv[i], "inches")) {
-            convFrom = LengthConverter::TYPE_INCH;
-        } else if (!strcmp(argv[i], "feet")) {
-            convFrom = LengthConverter::TYPE_FOOT;
-
-        } else if (!strcmp(argv[i], "yards")) {
-            convFrom = LengthConverter::TYPE_YARD;
-        } else if (!strcmp(argv[i], "miles")) {
-            convFrom = LengthConverter::TYPE_MILE;
-        }
+        convFrom = checkType(argv[i]);
         ++i;
-        value = atof(argv[i]);
-        if ((value < 0.0000001)&&(argv[i][0] != '0')) {
+        value = strtod(argv[i], &valEnd);
+        if (valEnd[0]) {
         message_ = "";
         message_ += "Wrong input!\n";
         return;
         }
     } else if (!strcmp(argv[i], "-to")) {
         ++i;
-        if (!strcmp(argv[i], "meters")) {
-            convTo = LengthConverter::TYPE_METER;
-        } else if (!strcmp(argv[i], "inches")) {
-            convTo = LengthConverter::TYPE_INCH;
-        } else if (!strcmp(argv[i], "feet")) {
-            convTo = LengthConverter::TYPE_FOOT;
-
-        } else if (!strcmp(argv[i], "yards")) {
-            convTo = LengthConverter::TYPE_YARD;
-        } else if (!strcmp(argv[i], "miles")) {
-            convTo = LengthConverter::TYPE_MILE;
-        }
+         convTo = checkType(argv[i]);
     }
     }
     if (convTo == LengthConverter::TYPE_WRONG ||
@@ -88,4 +67,23 @@ void Application::parseArgsAndConvert(int argc, const char** argv) {
     LengthConverter lengthConverter;
     stream << lengthConverter.convert(convFrom, value, convTo);
     message_ = stream.str();
+}
+
+LengthConverter::Type Application::checkType(const char* type) {
+    LengthConverter::Type typeToReturn;
+    if (!strcmp(type, "meters")) {
+            typeToReturn = LengthConverter::TYPE_METER;
+        } else if (!strcmp(type, "inches")) {
+            typeToReturn = LengthConverter::TYPE_INCH;
+        } else if (!strcmp(type, "feet")) {
+            typeToReturn = LengthConverter::TYPE_FOOT;
+
+        } else if (!strcmp(type, "yards")) {
+            typeToReturn = LengthConverter::TYPE_YARD;
+        } else if (!strcmp(type, "miles")) {
+            typeToReturn = LengthConverter::TYPE_MILE;
+        } else {
+            typeToReturn =  LengthConverter::TYPE_WRONG;
+        }
+    return typeToReturn;
 }

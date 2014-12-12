@@ -14,5 +14,6 @@ class Application {
 
         void help(const char* appname);
         void parseArgsAndConvert(int argc, const char** argv);
+        LengthConverter::Type checkType(const char* type);
 };
 #endif

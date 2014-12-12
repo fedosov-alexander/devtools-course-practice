@@ -13,7 +13,7 @@ LengthConverter::LengthConverter() {}
 LengthConverter::~LengthConverter() {}
 
 double LengthConverter::checkLength(double length) {
-if (length < 0.0000001) {
+if (length < 0.0) {
         throw std::string("Length can't be below zero!");
     }
 return length;
@@ -44,5 +44,9 @@ double LengthConverter::convertMetersTo(Type type, double length) {
     throw std::string("Unknown type");}
 }
 double LengthConverter::convert(Type from, double length, Type to) {
+    if (from == to) {
+        return checkLength(length);
+    } else {
     return (convertMetersTo(to, (convertToMeters(from, length))));
+    }
 }
