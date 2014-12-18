@@ -49,6 +49,20 @@ class AppTest : public ::testing::Test {
     void Assert(std::string expected) {
         EXPECT_TRUE(RE::PartialMatch(output_, RE(expected)));
     }
+    void AssertOutput(double result) {
+        double val;
+        char* end;
+        int i;
+        for (i = 0; i < 2; i++) {
+            scanf("%s", end);
+        }
+        val = strtod(output_.c_str(), &end);
+        if (!end[0]) {
+            EXPECT_NEAR(val, result, 0.01);
+        } else {
+            throw std::string("Wrong input!\n");
+        }
+    }
 
     Application app_;
     string output_;
@@ -92,7 +106,7 @@ TEST_F(AppTest, Can_Convert_Meters_To_Meters) {
 
     Act(args);
 
-    Assert("Conversion result is 10");
+    AssertOutput(10);
 }
 
 TEST_F(AppTest, Can_Convert_Inches_To_Inches) {
@@ -100,7 +114,7 @@ TEST_F(AppTest, Can_Convert_Inches_To_Inches) {
 
     Act(args);
 
-    Assert("Conversion result is 10");
+    AssertOutput(10);
 }
 
 TEST_F(AppTest, Can_Convert_Feet_To_Feet) {
@@ -108,7 +122,7 @@ TEST_F(AppTest, Can_Convert_Feet_To_Feet) {
 
     Act(args);
 
-    Assert("Conversion result is 10");
+    AssertOutput(10);
 }
 
 TEST_F(AppTest, Can_Convert_Yards_To_Yards) {
@@ -116,12 +130,12 @@ TEST_F(AppTest, Can_Convert_Yards_To_Yards) {
 
     Act(args);
 
-    Assert("Conversion result is 10");
+    AssertOutput(10);
 }
 TEST_F(AppTest, Can_Convert_Miles_To_Miles) {
     args = {"-from", "miles", "10", "-to", "miles"};
 
     Act(args);
 
-    Assert("Conversion result is 10");
+    AssertOutput(10);
 }
