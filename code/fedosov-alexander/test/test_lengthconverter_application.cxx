@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <functional>
 #include <iterator>
+#include <sstream>
 
 #include "include/application.hpp"
 
@@ -50,13 +51,16 @@ class AppTest : public ::testing::Test {
         EXPECT_TRUE(RE::PartialMatch(output_, RE(expected)));
     }
     void AssertOutput(double result) {
-        double val;
-        char* end;
-        int i;
-        for (i = 0; i < 2; i++) {
-            scanf("%s", end);
-        }
-        val = strtod(output_.c_str(), &end);
+        double val = 0.0;
+        char* end = NULL;
+        string strDouble = "";
+        int i = 0;
+        std::stringstream ssin(output_);
+        while (ssin.good() && i < 4) {
+        ssin >> strDouble;
+        ++i;
+    }
+        val = strtod(strDouble.c_str(), &end);
         if (!end[0]) {
             EXPECT_NEAR(val, result, 0.01);
         } else {
