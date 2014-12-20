@@ -50,10 +50,13 @@ class AppTest : public ::testing::Test {
     void Assert(std::string expected) {
         EXPECT_TRUE(RE::PartialMatch(output_, RE(expected)));
     }
-    void AssertOutput(double result) {
+    void AssertOutput(const char* pattern, double result) {
         double val = 0.0;
         char* end = NULL;
         string strDouble = "";
+        if (strstr(output_.c_str(), pattern) == NULL) {
+            throw std::string("Wrong input!\n");
+        }
         int i = 0;
         std::stringstream ssin(output_);
         while (ssin.good() && i < 4) {
@@ -71,6 +74,7 @@ class AppTest : public ::testing::Test {
     Application app_;
     string output_;
     vector<string> args;
+    const char* outputPattern = "Conversion result is ";
 };
 
 TEST_F(AppTest, Do_Print_Help_Without_Arguments) {
@@ -110,7 +114,7 @@ TEST_F(AppTest, Can_Convert_Meters_To_Meters) {
 
     Act(args);
 
-    AssertOutput(10);
+    AssertOutput(outputPattern, 10);
 }
 
 TEST_F(AppTest, Can_Convert_Inches_To_Inches) {
@@ -118,7 +122,7 @@ TEST_F(AppTest, Can_Convert_Inches_To_Inches) {
 
     Act(args);
 
-    AssertOutput(10);
+    AssertOutput(outputPattern, 10);
 }
 
 TEST_F(AppTest, Can_Convert_Feet_To_Feet) {
@@ -126,7 +130,7 @@ TEST_F(AppTest, Can_Convert_Feet_To_Feet) {
 
     Act(args);
 
-    AssertOutput(10);
+    AssertOutput(outputPattern, 10);
 }
 
 TEST_F(AppTest, Can_Convert_Yards_To_Yards) {
@@ -134,12 +138,12 @@ TEST_F(AppTest, Can_Convert_Yards_To_Yards) {
 
     Act(args);
 
-    AssertOutput(10);
+    AssertOutput(outputPattern, 10);
 }
 TEST_F(AppTest, Can_Convert_Miles_To_Miles) {
     args = {"-from", "miles", "10", "-to", "miles"};
 
     Act(args);
 
-    AssertOutput(10);
+    AssertOutput(outputPattern, 10);
 }

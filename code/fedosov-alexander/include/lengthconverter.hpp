@@ -16,6 +16,7 @@ class LengthConverter {
     double convertToMeters(Type type, double length);
     double convertMetersTo(Type type, double length);
     double convert(Type from, double length, Type to);
+    Type checkType(const char* type);
 
  private:
     static double checkLength(double length);

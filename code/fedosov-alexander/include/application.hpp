@@ -11,9 +11,7 @@ class Application {
         std::string operator()(int argc, const char** argv);
     private:
         std::string message_;
-
         void help(const char* appname);
         void parseArgsAndConvert(int argc, const char** argv);
-        LengthConverter::Type checkType(const char* type);
 };
 #endif

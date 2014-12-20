@@ -5,8 +5,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <cstdlib>
-#include <string>
 #include <sstream>
+#include <string>
 #include "include/lengthconverter.hpp"
 #include "include/application.hpp"
 
@@ -34,6 +34,7 @@ void Application::parseArgsAndConvert(int argc, const char** argv) {
     double value = 0.0;
     int i;
     char* valEnd;
+    LengthConverter lengthConverter;
     const char* nameFrom = "wrongname";
     const char* nameTo = "wrongname";
     if (argc != 6) {
@@ -56,30 +57,11 @@ void Application::parseArgsAndConvert(int argc, const char** argv) {
         nameTo = argv[i];
     }
     }
-    convFrom = checkType(nameFrom);
-    convTo = checkType(nameTo);
+    convFrom = lengthConverter.checkType(nameFrom);
+    convTo = lengthConverter.checkType(nameTo);
     std::ostringstream stream;
     stream << "Conversion result is ";
-    LengthConverter lengthConverter;
     stream << lengthConverter.convert(convFrom, value, convTo);
     message_ = stream.str();
 }
 
-LengthConverter::Type Application::checkType(const char* type) {
-    LengthConverter::Type typeToReturn;
-    if (!strcmp(type, "meters")) {
-            typeToReturn = LengthConverter::TYPE_METER;
-        } else if (!strcmp(type, "inches")) {
-            typeToReturn = LengthConverter::TYPE_INCH;
-        } else if (!strcmp(type, "feet")) {
-            typeToReturn = LengthConverter::TYPE_FOOT;
-
-        } else if (!strcmp(type, "yards")) {
-            typeToReturn = LengthConverter::TYPE_YARD;
-        } else if (!strcmp(type, "miles")) {
-            typeToReturn = LengthConverter::TYPE_MILE;
-        } else {
-            throw std::string("Unknown type");
-        }
-    return typeToReturn;
-}
