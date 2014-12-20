@@ -129,3 +129,7 @@ TEST_F(lengthconverterTest, typechecking_correct_test) {
             (*iter).first);
     }
 }
+
+TEST_F(lengthconverterTest, typechecking_wrong_test) {
+     EXPECT_THROW(converter.checkType("wrongname"), std::string);
+}
