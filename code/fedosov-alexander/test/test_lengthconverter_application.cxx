@@ -147,3 +147,11 @@ TEST_F(AppTest, Can_Convert_Miles_To_Miles) {
 
     AssertOutput(outputPattern, 10);
 }
+
+TEST_F(AppTest, Can_Throw_When_Incorrect_Pattern) {
+    args = {"-from", "miles", "10", "-to", "miles"};
+
+    Act(args);
+
+    EXPECT_THROW(AssertOutput("wrongPattern", 11), std::string);
+}
